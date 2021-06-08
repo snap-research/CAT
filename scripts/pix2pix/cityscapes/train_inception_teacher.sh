@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+python train.py --dataroot database/cityscapes \
+  --model pix2pix \
+  --log_dir logs/pix2pix/cityscapes/inception/teacher \
+  --netG inception_9blocks \
+  --batch_size 32 \
+  --lr 0.0002 \
+  --save_latest_freq 25000 --save_epoch_freq 25 \
+  --nepochs 500 --nepochs_decay 750 \
+  --direction BtoA \
+  --real_stat_path real_stat/cityscapes_A.npz \
+  --drn_path drn-d-105_ms_cityscapes.pth \
+  --cityscapes_path database/cityscapes-origin \
+  --num_threads 32 \
+  --gpu_ids 0,1,2,3 \
+  --norm batch \
+  --norm_affine \
+  --norm_affine_D \
+  --norm_track_running_stats \
+  --channels_reduction_factor 6 \
+  --kernel_sizes 1 3 5 \
+  --table_path datasets/table.txt

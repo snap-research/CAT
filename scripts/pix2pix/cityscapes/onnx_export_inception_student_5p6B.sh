@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+python3 onnx_export.py --dataroot database/cityscapes \
+  --distiller inception \
+  --log_dir onnx_files/pix2pix/cityscapes/inception/student/5p6B \
+  --restore_teacher_G_path logs/pix2pix/cityscapes/inception/teacher/checkpoints/best_net_G.pth \
+  --pretrained_student_G_path logs/pix2pix/cityscapes/inception/student/5p6B/checkpoints/best_net_G.pth \
+  --real_stat_path real_stat/cityscapes_A.npz \
+  --teacher_netG inception_9blocks --student_netG inception_9blocks \
+  --pretrained_ngf 64 --teacher_ngf 64 --student_ngf 48 \
+  --drn_path drn-d-105_ms_cityscapes.pth \
+  --cityscapes_path database/cityscapes-origin \
+  --table_path datasets/table.txt \
+  --norm batch \
+  --norm_affine \
+  --norm_affine_D \
+  --norm_track_running_stats \
+  --channels_reduction_factor 6 \
+  --kernel_sizes 1 3 5 \
+  --direction BtoA \
+  --batch_size 8 \
+  --eval_batch_size 2 \
+  --gpu_ids 0 \
+  --num_threads 8 \
+  --prune_cin_lb 16 \
+  --target_flops 5.6e9 \
