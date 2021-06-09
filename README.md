@@ -1,13 +1,13 @@
 # CAT
-### [project]() | [arXiv](https://arxiv.org/abs/2103.03467)
+[arXiv](https://arxiv.org/abs/2103.03467)
 
 <p align="center">
   <img src="images/comparison.png" width=400>
 </p>
 
 Pytorch implementation of our method for compressing image-to-image models. <br>
-[Teachers Do More Than Teach: Compressing Image-to-Image Models]()  
-[Qing Jin]()<sup>1</sup>, [Jian Ren](https://alanspike.github.io/)<sup>2</sup>, [Oliver J. Woodford](https://scholar.google.com/citations?user=6czTBiUAAAAJ&hl=en), Jiazhuo Wang<sup>2</sup>, Geng Yuan<sup>1</sup>, [Yanzhi Wang](https://coe.northeastern.edu/people/wang-yanzhi/)<sup>1</sup>, [Sergey Tulyakov](http://www.stulyakov.com/)<sup>2</sup>  
+[Teachers Do More Than Teach: Compressing Image-to-Image Models](https://arxiv.org/abs/2103.03467)  
+[Qing Jin](https://scholar.google.com/citations?user=X9iggBcAAAAJ&hl=zh-CN)<sup>1</sup>, [Jian Ren](https://alanspike.github.io/)<sup>2</sup>, [Oliver J. Woodford](https://scholar.google.com/citations?user=6czTBiUAAAAJ&hl=en), Jiazhuo Wang<sup>2</sup>, Geng Yuan<sup>1</sup>, [Yanzhi Wang](https://coe.northeastern.edu/people/wang-yanzhi/)<sup>1</sup>, [Sergey Tulyakov](http://www.stulyakov.com/)<sup>2</sup>  
 <sup>1</sup>Northeastern University, <sup>2</sup>Snap Inc. <br>
 In CVPR 2021.  
 
