@@ -1,5 +1,5 @@
 # CAT
-[arXiv](https://arxiv.org/abs/2103.03467)
+[CVPR](https://openaccess.thecvf.com/content/CVPR2021/html/Jin_Teachers_Do_More_Than_Teach_Compressing_Image-to-Image_Models_CVPR_2021_paper.html)|[arXiv](https://arxiv.org/abs/2103.03467)|[website](https://dejqk.github.io/GAN_CAT)
 
 <p align="center">
   <img src="images/comparison.png" width=400>
@@ -7,7 +7,7 @@
 
 Pytorch implementation of our method for compressing image-to-image models. <br>
 [Teachers Do More Than Teach: Compressing Image-to-Image Models](https://arxiv.org/abs/2103.03467)  
-[Qing Jin](https://scholar.google.com/citations?user=X9iggBcAAAAJ&hl=zh-CN)<sup>1</sup>, [Jian Ren](https://alanspike.github.io/)<sup>2</sup>, [Oliver J. Woodford](https://scholar.google.com/citations?user=6czTBiUAAAAJ&hl=en), Jiazhuo Wang<sup>2</sup>, Geng Yuan<sup>1</sup>, [Yanzhi Wang](https://coe.northeastern.edu/people/wang-yanzhi/)<sup>1</sup>, [Sergey Tulyakov](http://www.stulyakov.com/)<sup>2</sup>  
+[Qing Jin](https://scholar.google.com/citations?user=X9iggBcAAAAJ&hl=zh-CN)<sup>1</sup>, [Jian Ren](https://alanspike.github.io/)<sup>2</sup>, [Oliver J. Woodford](https://scholar.google.com/citations?user=6czTBiUAAAAJ&hl=en), [Jiazhuo Wang](https://www.linkedin.com/in/jiazhuo-wang-065624102)<sup>2</sup>, [Geng Yuan](https://scholar.google.com/citations?user=tBIAgtgAAAAJ)<sup>1</sup>, [Yanzhi Wang](https://coe.northeastern.edu/people/wang-yanzhi/)<sup>1</sup>, [Sergey Tulyakov](http://www.stulyakov.com/)<sup>2</sup>  
 <sup>1</sup>Northeastern University, <sup>2</sup>Snap Inc. <br>
 In CVPR 2021.  
 
@@ -146,6 +146,7 @@ If you use this code for your research, please cite our [paper](https://arxiv.or
   title={Teachers Do More Than Teach: Compressing Image-to-Image Models},
   author={Jin, Qing and Ren, Jian and Woodford, Oliver J and Wang, Jiazhuo and Yuan, Geng and Wang, Yanzhi and Tulyakov, Sergey},
   booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={13600--13611},
   year={2021}
 }
 ```
