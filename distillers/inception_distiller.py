@@ -73,6 +73,7 @@ class InceptionDistiller(BaseInceptionDistiller):
                             log_dir='logs/inception',
                             teacher_netG='inception_9blocks',
                             student_netG='inception_9blocks')
+        parser = networks.modify_commandline_options(parser, is_train)
         return parser
 
     def __init__(self, opt):
