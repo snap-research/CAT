@@ -25,6 +25,7 @@ from utils.weight_transfer import load_pretrained_weight
 from utils.model_profiling import model_profiling
 from utils import prune
 from utils.common import KA
+from models import networks
 
 from .base_inception_distiller import BaseInceptionDistiller
 
