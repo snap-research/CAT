@@ -143,3 +143,8 @@ class InceptionGenerator(BaseNetwork):
 
     def get_named_block_list(self):
         return _get_named_block_list(self)
+
+    def replace_norm(self, orig_norm, new_norm):
+        for m in self.modules():
+            if isinstance(m, orig_norm):
+                m = new_norm(orig_norm.num_features)

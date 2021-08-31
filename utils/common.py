@@ -662,6 +662,20 @@ def shrink_model(model, target_flops, opt):
             netG_tmp.up_sampling[-2].bias.data)
 
     model.netG_student = netG_to_prune
+    # To Do
+    if opt.norm_student != opt.norm:
+        teacher_norm = networks.get_norm_layer(
+            norm_type=opt.norm,
+            affine=getattr(opt, 'norm_affine', False),
+            track_running_stats=getattr(opt, 'norm_track_running_stats',
+                                        False))
+        student_norm = networks.get_norm_layer(
+            norm_type=opt.norm_student,
+            affine=getattr(opt, 'norm_affine_student', False),
+            track_running_stats=getattr(opt,
+                                        'norm_track_running_stats_student',
+                                        False))
+        model.netG_student.replace_norm(teacher_norm, student_norm)
     torch.cuda.synchronize()
     time_after_prune = time.time()
     pruning_time = time_after_prune - time_before_prune

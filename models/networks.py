@@ -173,14 +173,11 @@ def define_G(input_nc,
              init_type='normal',
              init_gain=0.02,
              gpu_ids=[],
-             opt=None,
-             norm_layer=None):
-    if norm_layer is not None:
-        norm_layer = get_norm_layer(norm_type=norm,
-                                    affine=getattr(opt, 'norm_affine', False),
-                                    track_running_stats=getattr(
-                                        opt, 'norm_track_running_stats',
-                                        False))
+             opt=None):
+    norm_layer = get_norm_layer(norm_type=norm,
+                                affine=getattr(opt, 'norm_affine', False),
+                                track_running_stats=getattr(
+                                    opt, 'norm_track_running_stats', False))
     if netG == 'inception_9blocks':
         from .modules.inception_architecture.inception_generator import InceptionGenerator
         net = InceptionGenerator(

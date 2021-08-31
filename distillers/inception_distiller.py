@@ -21,7 +21,6 @@ from tqdm import tqdm
 
 from metric import get_fid, get_mIoU
 from utils import util
-from utils.weight_transfer import load_pretrained_weight
 from utils.model_profiling import model_profiling
 from utils import prune
 from utils.common import KA
@@ -193,14 +192,14 @@ class InceptionDistiller(BaseInceptionDistiller):
                       verbose=True,
                       teacher_only=False,
                       restore_pretrain=True):
-        if self.opt.restore_pretrained_G_path is not None:
-            util.load_network(self.netG_pretrained,
-                              self.opt.restore_pretrained_G_path, verbose)
-            load_pretrained_weight(self.opt.pretrained_netG,
-                                   self.opt.student_netG, self.netG_pretrained,
-                                   self.netG_student, self.opt.pretrained_ngf,
-                                   self.opt.student_ngf)
-            del self.netG_pretrained
+        # if self.opt.restore_pretrained_G_path is not None:
+        #     util.load_network(self.netG_pretrained,
+        #                       self.opt.restore_pretrained_G_path, verbose)
+        #     load_pretrained_weight(self.opt.pretrained_netG,
+        #                            self.opt.student_netG, self.netG_pretrained,
+        #                            self.netG_student, self.opt.pretrained_ngf,
+        #                            self.opt.student_ngf)
+        #     del self.netG_pretrained
         super(InceptionDistiller, self).load_networks()
 
     def evaluate_model(self, step, save_image=False):
