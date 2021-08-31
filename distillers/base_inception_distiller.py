@@ -98,6 +98,15 @@ class BaseInceptionDistiller(BaseModel):
                             help='weight for gan loss')
         parser.add_argument('--teacher_dropout_rate', type=float, default=0)
         parser.add_argument('--student_dropout_rate', type=float, default=0)
+        parser.add_argument(
+            '--norm_affine_student',
+            action='store_true',
+            help='set affine for the norm layer of student network')
+        parser.add_argument(
+            '--norm_track_running_stats_student',
+            action='store_true',
+            help='set track_running_stats for the norm layer of student network'
+        )
         return parser
 
     def __init__(self, opt):
@@ -108,6 +117,17 @@ class BaseInceptionDistiller(BaseModel):
         self.image_paths = []
         self.visual_names = ['real_A', 'Sfake_B', 'Tfake_B', 'real_B']
         self.model_names = ['netG_student', 'netG_teacher', 'netD']
+        teacher_norm_layer = networks.get_norm_layer(
+            norm_type=opt.norm,
+            affine=getattr(opt, 'norm_affine', False),
+            track_running_stats=getattr(opt, 'norm_track_running_stats',
+                                        False))
+        student_norm_layer = networks.get_norm_layer(
+            norm_type=opt.norm,
+            affine=getattr(opt, 'norm_affine_student', False),
+            track_running_stats=getattr(opt,
+                                        'norm_track_running_stats_student',
+                                        False))
         self.netG_teacher = networks.define_G(opt.input_nc,
                                               opt.output_nc,
                                               opt.teacher_ngf,
@@ -117,29 +137,33 @@ class BaseInceptionDistiller(BaseModel):
                                               opt.init_type,
                                               opt.init_gain,
                                               self.gpu_ids,
-                                              opt=opt)
+                                              opt=opt,
+                                              norm_layer=teacher_norm_layer)
         self.netG_student = networks.define_G(opt.input_nc,
                                               opt.output_nc,
                                               opt.student_ngf,
                                               opt.student_netG,
-                                              opt.norm,
+                                              opt.norm_student,
                                               opt.student_dropout_rate,
                                               opt.init_type,
                                               opt.init_gain,
                                               self.gpu_ids,
-                                              opt=opt)
+                                              opt=opt,
+                                              norm_layer=student_norm_layer)
 
         if hasattr(opt, 'distiller'):
-            self.netG_pretrained = networks.define_G(opt.input_nc,
-                                                     opt.output_nc,
-                                                     opt.pretrained_ngf,
-                                                     opt.pretrained_netG,
-                                                     opt.norm,
-                                                     0,
-                                                     opt.init_type,
-                                                     opt.init_gain,
-                                                     self.gpu_ids,
-                                                     opt=opt)
+            self.netG_pretrained = networks.define_G(
+                opt.input_nc,
+                opt.output_nc,
+                opt.pretrained_ngf,
+                opt.pretrained_netG,
+                opt.norm,
+                0,
+                opt.init_type,
+                opt.init_gain,
+                self.gpu_ids,
+                opt=opt,
+                norm_layer=teacher_norm_layer)
 
         if opt.dataset_mode in ['aligned', 'cityscapes']:
             self.netD = networks.define_D(opt.input_nc + opt.output_nc,

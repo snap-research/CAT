@@ -53,6 +53,13 @@ class BaseOptions:
             'instance normalization or batch normalization [instance | batch | none]'
         )
         parser.add_argument(
+            '--norm_student',
+            type=str,
+            default='instance',
+            help=
+            'instance normalization or batch normalization [instance | batch | none] for student network'
+        )
+        parser.add_argument(
             '--init_type',
             type=str,
             default='normal',
