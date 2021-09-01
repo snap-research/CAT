@@ -175,7 +175,7 @@ class InceptionDistiller(BaseInceptionDistiller):
         else:
             self.loss_G_distill = 0
         self.loss_G = self.loss_G_gan + self.loss_G_recon + self.loss_G_distill
-        self.loss_G.backward()
+        self.loss_G.backward(retain_graph=True)
 
     def optimize_parameters(self, steps):
         self.forward()
