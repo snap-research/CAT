@@ -149,8 +149,7 @@ class BaseInceptionDistiller(BaseModel):
                 opt.init_type,
                 opt.init_gain,
                 self.gpu_ids,
-                opt=opt,
-                norm_layer=teacher_norm_layer)
+                opt=opt)
 
         if opt.dataset_mode in ['aligned', 'cityscapes']:
             self.netD = networks.define_D(opt.input_nc + opt.output_nc,

@@ -675,7 +675,8 @@ def shrink_model(model, target_flops, opt):
             track_running_stats=getattr(opt,
                                         'norm_track_running_stats_student',
                                         False))
-        model.netG_student.replace_norm(teacher_norm, student_norm)
+        # model.netG_student.replace_norm(teacher_norm, student_norm)
+        replace_norm(model.netG_student, teacher_norm, student_norm)
     torch.cuda.synchronize()
     time_after_prune = time.time()
     pruning_time = time_after_prune - time_before_prune
@@ -720,6 +721,20 @@ def shrink_model(model, target_flops, opt):
 
     return pruning_time
 
+
+def replace_norm(net, orig_norm, new_norm):
+    if type(orig_norm) == functools.partial:
+        for child_name, child in net.named_children():
+            if isinstance(child, orig_norm.func):
+                setattr(net, child_name, new_norm(child.num_features))
+            else:
+                replace_norm(child, orig_norm, new_norm)
+    else:
+        for child_name, child in net.named_children():
+            if isinstance(child, orig_norm):
+                setattr(net, child_name, new_norm(child.num_features))
+            else:
+                replace_norm(child, orig_norm, new_norm)
 
 def shrink_spade_model(model, target_flops, opt):
     torch.cuda.synchronize()
