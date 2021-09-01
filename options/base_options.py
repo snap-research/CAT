@@ -100,8 +100,8 @@ class BaseOptions:
                             default=286,
                             help='scale images to this size')
         parser.add_argument('--crop_size',
-                            type=int,
-                            default=256,
+                            type=str,
+                            default='256, 256',
                             help='then crop to this size')
         parser.add_argument(
             '--aspect_ratio',
@@ -237,6 +237,6 @@ class BaseOptions:
                 opt.gpu_ids.append(id)
         if len(opt.gpu_ids) > 0:
             torch.cuda.set_device(opt.gpu_ids[0])
-
+        opt.crop_size = [int(item) for item in opt.crop_size.split(',')]
         self.opt = opt
         return self.opt

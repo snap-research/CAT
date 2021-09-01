@@ -675,8 +675,11 @@ def shrink_model(model, target_flops, opt):
             track_running_stats=getattr(opt,
                                         'norm_track_running_stats_student',
                                         False))
-        # model.netG_student.replace_norm(teacher_norm, student_norm)
         replace_norm(model.netG_student, teacher_norm, student_norm)
+    if opt.padding_type != opt.padding_type_student:
+        teacher_padding = get_padding_func(opt.padding_type)
+        student_padding = get_padding_func(opt.padding_type_student)
+        replace_padding(model.netG_student, teacher_padding, student_padding)
     torch.cuda.synchronize()
     time_after_prune = time.time()
     pruning_time = time_after_prune - time_before_prune
@@ -735,6 +738,31 @@ def replace_norm(net, orig_norm, new_norm):
                 setattr(net, child_name, new_norm(child.num_features))
             else:
                 replace_norm(child, orig_norm, new_norm)
+
+
+def get_padding_func(padding_type):
+    if padding_type == 'reflect':
+        return nn.ReflectionPad2d
+    if padding_type == 'replicate':
+        return nn.ReplicationPad2d
+    if padding_type == 'zero':
+        return functools.partial(nn.ConstantPad2d, value=0.0)
+
+
+def replace_padding(net, orig_padding, new_padding):
+    if type(orig_padding) == functools.partial:
+        for child_name, child in net.named_children():
+            if isinstance(child, orig_padding.func):
+                setattr(net, child_name, new_padding(child.padding))
+            else:
+                replace_padding(child, orig_padding, new_padding)
+    else:
+        for child_name, child in net.named_children():
+            if isinstance(child, orig_padding):
+                setattr(net, child_name, new_padding(child.padding))
+            else:
+                replace_padding(child, orig_padding, new_padding)
+
 
 def shrink_spade_model(model, target_flops, opt):
     torch.cuda.synchronize()

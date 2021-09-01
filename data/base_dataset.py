@@ -60,14 +60,16 @@ class BaseDataset(data.Dataset, ABC):
         pass
 
 
-def get_params(opt, size):
-    w, h = size
+def get_params(opt, img):
+    w, h = img.size
     new_h = h
     new_w = w
     crop_w, crop_h = 0, 0
     if opt.preprocess == 'resize_and_crop':
-        new_h = new_w = opt.load_size
-        crop_h = crop_w = opt.crop_size
+        img = transforms.Resize(opt.load_size)(img)
+        new_h, new_w = img.size
+        crop_w = opt.crop_size[1]
+        crop_h = opt.crop_size[0]
     elif opt.preprocess == 'scale_width_and_crop':
         new_w = opt.load_size
         new_h = opt.load_size * h // w
@@ -92,8 +94,8 @@ def get_transform(opt,
     if grayscale:
         transform_list.append(transforms.Grayscale(1))
     if 'resize' in opt.preprocess:
-        osize = [opt.load_size, opt.load_size]
-        transform_list.append(transforms.Resize(osize, method))
+        # osize = [opt.load_size, opt.load_size]
+        transform_list.append(transforms.Resize(opt.load_size, method))
     elif 'scale_width' in opt.preprocess:
         transform_list.append(
             transforms.Lambda(

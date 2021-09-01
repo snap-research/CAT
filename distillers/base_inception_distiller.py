@@ -107,6 +107,12 @@ class BaseInceptionDistiller(BaseModel):
             action='store_true',
             help='set track_running_stats for the norm layer of student network'
         )
+        parser.add_argument(
+            '--padding_type_student',
+            type=str,
+            default='zero',
+            choices=['reflect', 'zero'],
+            help='padding type to use for student model[reflect | zero]')
         return parser
 
     def __init__(self, opt):
@@ -126,6 +132,7 @@ class BaseInceptionDistiller(BaseModel):
                                               opt.init_type,
                                               opt.init_gain,
                                               self.gpu_ids,
+                                              opt.padding_type,
                                               opt=opt)
         self.netG_student = networks.define_G(opt.input_nc,
                                               opt.output_nc,
@@ -136,20 +143,21 @@ class BaseInceptionDistiller(BaseModel):
                                               opt.init_type,
                                               opt.init_gain,
                                               self.gpu_ids,
+                                              opt.padding_type_student,
                                               opt=opt)
 
         if hasattr(opt, 'distiller'):
-            self.netG_pretrained = networks.define_G(
-                opt.input_nc,
-                opt.output_nc,
-                opt.pretrained_ngf,
-                opt.pretrained_netG,
-                opt.norm,
-                0,
-                opt.init_type,
-                opt.init_gain,
-                self.gpu_ids,
-                opt=opt)
+            self.netG_pretrained = networks.define_G(opt.input_nc,
+                                                     opt.output_nc,
+                                                     opt.pretrained_ngf,
+                                                     opt.pretrained_netG,
+                                                     opt.norm,
+                                                     0,
+                                                     opt.init_type,
+                                                     opt.init_gain,
+                                                     self.gpu_ids,
+                                                     opt.padding_type,
+                                                     opt=opt)
 
         if opt.dataset_mode in ['aligned', 'cityscapes']:
             self.netD = networks.define_D(opt.input_nc + opt.output_nc,
