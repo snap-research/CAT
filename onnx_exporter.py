@@ -58,7 +58,7 @@ class Exporter:
         shrink(model, opt)
         model.netG_student.load_state_dict(
             torch.load(opt.pretrained_student_G_path))
-
+        model.print_networks()
         self.opt = opt
         self.model = model
 
