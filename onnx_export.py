@@ -10,6 +10,6 @@ In no event will Snap Inc. be liable for any damages or losses of any kind arisi
 from onnx_exporter import Exporter
 
 if __name__ == '__main__':
-    exporter = Exporter('distill')
+    exporter = Exporter()
     exporter.start()
     print('Onnx exporting finished!!!')

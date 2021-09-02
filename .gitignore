@@ -6,3 +6,4 @@ results/
 __pycache__
 logs
 test_script
+onnx_files
