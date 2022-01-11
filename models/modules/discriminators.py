@@ -168,7 +168,9 @@ class SPADENLayerDiscriminator(BaseNetwork):
             self.add_module('model' + str(n), nn.Sequential(*sequence[n]))
 
     def compute_D_input_nc(self, opt):
-        input_nc = opt.semantic_nc + opt.output_nc
+        input_nc = opt.output_nc
+        if hasattr(opt, 'semantic_nc'):
+            input_nc += opt.semantic_nc
         return input_nc
 
     def forward(self, input):

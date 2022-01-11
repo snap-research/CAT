@@ -662,6 +662,24 @@ def shrink_model(model, target_flops, opt):
             netG_tmp.up_sampling[-2].bias.data)
 
     model.netG_student = netG_to_prune
+    # To Do
+    if opt.norm_student != opt.norm:
+        teacher_norm = networks.get_norm_layer(
+            norm_type=opt.norm,
+            affine=getattr(opt, 'norm_affine', False),
+            track_running_stats=getattr(opt, 'norm_track_running_stats',
+                                        False))
+        student_norm = networks.get_norm_layer(
+            norm_type=opt.norm_student,
+            affine=getattr(opt, 'norm_affine_student', False),
+            track_running_stats=getattr(opt,
+                                        'norm_track_running_stats_student',
+                                        False))
+        replace_norm(model.netG_student, teacher_norm, student_norm)
+    if opt.padding_type != opt.padding_type_student:
+        teacher_padding = get_padding_func(opt.padding_type)
+        student_padding = get_padding_func(opt.padding_type_student)
+        replace_padding(model.netG_student, teacher_padding, student_padding)
     torch.cuda.synchronize()
     time_after_prune = time.time()
     pruning_time = time_after_prune - time_before_prune
@@ -705,6 +723,45 @@ def shrink_model(model, target_flops, opt):
     print('All layers are pruned.')
 
     return pruning_time
+
+
+def replace_norm(net, orig_norm, new_norm):
+    if type(orig_norm) == functools.partial:
+        for child_name, child in net.named_children():
+            if isinstance(child, orig_norm.func):
+                setattr(net, child_name, new_norm(child.num_features))
+            else:
+                replace_norm(child, orig_norm, new_norm)
+    else:
+        for child_name, child in net.named_children():
+            if isinstance(child, orig_norm):
+                setattr(net, child_name, new_norm(child.num_features))
+            else:
+                replace_norm(child, orig_norm, new_norm)
+
+
+def get_padding_func(padding_type):
+    if padding_type == 'reflect':
+        return nn.ReflectionPad2d
+    if padding_type == 'replicate':
+        return nn.ReplicationPad2d
+    if padding_type == 'zero':
+        return functools.partial(nn.ConstantPad2d, value=0.0)
+
+
+def replace_padding(net, orig_padding, new_padding):
+    if type(orig_padding) == functools.partial:
+        for child_name, child in net.named_children():
+            if isinstance(child, orig_padding.func):
+                setattr(net, child_name, new_padding(child.padding))
+            else:
+                replace_padding(child, orig_padding, new_padding)
+    else:
+        for child_name, child in net.named_children():
+            if isinstance(child, orig_padding):
+                setattr(net, child_name, new_padding(child.padding))
+            else:
+                replace_padding(child, orig_padding, new_padding)
 
 
 def shrink_spade_model(model, target_flops, opt):

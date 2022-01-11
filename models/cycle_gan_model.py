@@ -107,6 +107,7 @@ class CycleGANModel(BaseModel):
                             nepochs=100,
                             nepochs_decay=100,
                             save_epoch_freq=20)
+        parser = networks.modify_commandline_options(parser, is_train)
         return parser
 
     def __init__(self, opt):

@@ -8,55 +8,29 @@ In no event will Snap Inc. be liable for any damages or losses of any kind arisi
 """
 
 import os
-import random
 import sys
-import time
-import warnings
 
-import numpy as np
 import torch
-from torch.backends import cudnn
-
-from data import create_dataloader
-import common as mc
-from utils.logger import Logger
-from utils.common import load_pretrained_student, load_pretrained_spade_student, shrink
-
 from torchprofile import profile_macs
 
-
-def set_seed(seed):
-    cudnn.benchmark = False
-    cudnn.deterministic = True
-    np.random.seed(seed)
-    random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
+import common as mc
+from utils.logger import Logger
+from utils.common import shrink
+from options.distill_options import DistillOptions as Options
+from distillers import create_distiller as create_model
+from data import create_dataloader
 
 
 class Exporter:
-    def __init__(self, task):
-        if task == 'train':
-            from options.train_options import TrainOptions as Options
-            from models import create_model as create_model
-        elif task == 'distill':
-            from options.distill_options import DistillOptions as Options
-            from distillers import create_distiller as create_model
-        else:
-            raise NotImplementedError('Unknown task [%s]!!!' % task)
+    def __init__(self):
+
         opt = Options().parse()
         opt.tensorboard_dir = opt.log_dir if opt.tensorboard_dir is None else opt.tensorboard_dir
         print(' '.join(sys.argv))
-        if opt.phase != 'train':
-            warnings.warn('You are not using training set for %s!!!' % task)
         with open(os.path.join(opt.log_dir, 'opt.txt'), 'a') as f:
             f.write(' '.join(sys.argv) + '\n')
-        set_seed(opt.seed)
 
         dataloader = create_dataloader(opt)
-        dataset_size = len(dataloader.dataset)
-        print('The number of training images = %d' % dataset_size)
         opt.iters_per_epoch = len(dataloader)
         if opt.dataset_mode in ['aligned', 'unaligned']:
             opt.data_channel, opt.data_height, opt.data_width = next(
@@ -81,22 +55,12 @@ class Exporter:
         model.setup(opt)
         logger = Logger(opt)
 
-        if task == 'distill':
-            shrink(model, opt)
-
-        if getattr(opt, 'pretrained_student_G_path', '') and task == 'distill':
-            if 'spade' in opt.teacher_netG:
-                assert 'spade' in opt.student_netG
-                assert 'spade' in opt.pretrained_netG
-                load_pretrained_spade_student(model, opt)
-            else:
-                load_pretrained_student(model, opt)
-
+        shrink(model, opt)
+        model.netG_student.load_state_dict(
+            torch.load(opt.pretrained_student_G_path))
+        model.print_networks()
         self.opt = opt
-        self.dataloader = dataloader
         self.model = model
-        self.logger = logger
-        self.task = task
 
         modules_on_one_gpu = getattr(model, 'modules_on_one_gpu', model)
         logger.print_info(
@@ -105,7 +69,6 @@ class Exporter:
         logger.print_info(
             f'netG student FLOPs: {mc.unwrap_model(modules_on_one_gpu.netG_student).n_macs}.'
         )
-
         data_input = torch.ones(
             [1, opt.data_channel, opt.data_height,
              opt.data_width]).to(model.device)
@@ -124,20 +87,11 @@ class Exporter:
         logger.print_info(f'netG teacher FLOPs: {macs_t}; Params: {params_t}.')
         logger.print_info(f'netG student FLOPs: {macs_s}; Params: {params_s}.')
 
-    def evaluate(self, epoch, iter, message, save_image=False):
-        start_time = time.time()
-        metrics = self.model.evaluate_model(iter, save_image=save_image)
-        self.logger.print_current_metrics(epoch, iter, metrics,
-                                          time.time() - start_time)
-        self.logger.print_info(message)
-
     def start(self):
         opt = self.opt
-        dataloader = self.dataloader
         model = self.model
         device = model.device
         model = getattr(model, 'modules_on_one_gpu', model)
-        logger = self.logger
 
         batch_size = 1
         rand_input = torch.randn(batch_size,

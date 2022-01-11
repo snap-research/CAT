@@ -82,8 +82,8 @@ if __name__ == '__main__':
                         default=256,
                         help='scale images to this size')
     parser.add_argument('--crop_size',
-                        type=int,
-                        default=256,
+                        type=str,
+                        default='512,256',
                         help='then crop to this size')
     parser.add_argument(
         '--preprocess',
@@ -134,7 +134,7 @@ if __name__ == '__main__':
         return gpu_ids
 
     opt.gpu_ids = parse_gpu_ids(opt.gpu_ids)
-
+    opt.crop_size = [int(item) for item in opt.crop_size.split(',')]
     if not opt.output_path.endswith('.npz'):
         warnings.warn(
             'The output is a numpy npz file, but the output path does\'nt end with ".npz".'

@@ -62,6 +62,7 @@ class Pix2PixModel(BaseModel):
         parser.add_argument('--l1_renorm',
                             action='store_true',
                             help='renorm for l1')
+        parser = networks.modify_commandline_options(parser, is_train)
         return parser
 
     def __init__(self, opt):
