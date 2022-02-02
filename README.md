@@ -1,5 +1,16 @@
 # CAT
-[CVPR](https://openaccess.thecvf.com/content/CVPR2021/html/Jin_Teachers_Do_More_Than_Teach_Compressing_Image-to-Image_Models_CVPR_2021_paper.html)|[arXiv](https://arxiv.org/abs/2103.03467)|[website](https://dejqk.github.io/GAN_CAT)
+[CVPR](https://openaccess.thecvf.com/content/CVPR2021/html/Jin_Teachers_Do_More_Than_Teach_Compressing_Image-to-Image_Models_CVPR_2021_paper.html) | [arXiv](https://arxiv.org/abs/2103.03467) | [website](https://dejqk.github.io/GAN_CAT) | [Tutorial (Image-to-Image)](https://lensstudio.snapchat.com/guides/machine-learning/lens-templates/) (Try our method to built Lens in Snapchat!)
+
+<table cellpadding="0" cellspacing="0" >
+  <tr>
+    <td  align="center">Input<br> <img src="images/input.gif" width=200px></td>
+    <td  align="center">Night<br> <img src="images/night.gif" width=200px></td>
+    <td  align="center">Style<br> <img src="images/style.gif" width=200px></td>
+    <td  align="center">Anime<br> <img src="images/anime.gif" width=200px></td>
+  </tr>
+</table>
+
+
 
 <p align="center">
   <img src="images/comparison.png" width=400>
