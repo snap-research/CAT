@@ -1,5 +1,5 @@
 # CAT
-[CVPR](https://openaccess.thecvf.com/content/CVPR2021/html/Jin_Teachers_Do_More_Than_Teach_Compressing_Image-to-Image_Models_CVPR_2021_paper.html) | [arXiv](https://arxiv.org/abs/2103.03467) | [website](https://dejqk.github.io/GAN_CAT) | [Tutorial (Image-to-Image)](https://lensstudio.snapchat.com/guides/machine-learning/lens-templates/) (Try our method to built Lens in Snapchat!)
+[CVPR](https://openaccess.thecvf.com/content/CVPR2021/html/Jin_Teachers_Do_More_Than_Teach_Compressing_Image-to-Image_Models_CVPR_2021_paper.html) | [arXiv](https://arxiv.org/abs/2103.03467) | [website](https://dejqk.github.io/GAN_CAT) | [Tutorial (Image-to-Image)](https://lensstudio.snapchat.com/guides/machine-learning/lens-templates/) (Our method can be used in mobile devices!)
 
 <table cellpadding="0" cellspacing="0" >
   <tr>
