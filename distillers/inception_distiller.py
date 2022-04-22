@@ -188,19 +188,8 @@ class InceptionDistiller(BaseInceptionDistiller):
         self.backward_G(steps)
         self.optimizer_G.step()
 
-    def load_networks(self,
-                      verbose=True,
-                      teacher_only=False,
-                      restore_pretrain=True):
-        # if self.opt.restore_pretrained_G_path is not None:
-        #     util.load_network(self.netG_pretrained,
-        #                       self.opt.restore_pretrained_G_path, verbose)
-        #     load_pretrained_weight(self.opt.pretrained_netG,
-        #                            self.opt.student_netG, self.netG_pretrained,
-        #                            self.netG_student, self.opt.pretrained_ngf,
-        #                            self.opt.student_ngf)
-        #     del self.netG_pretrained
-        super(InceptionDistiller, self).load_networks()
+    def load_networks(self, prune_continue=False):
+        super(InceptionDistiller, self).load_networks(prune_continue)
 
     def evaluate_model(self, step, save_image=False):
         self.is_best = False
