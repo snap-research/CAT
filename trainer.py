@@ -107,8 +107,11 @@ class Trainer:
             modules_on_one_gpu.netG_student = init_net(
                 modules_on_one_gpu.netG_student, opt.init_type, opt.init_gain,
                 []).to(model.device)
-            if getattr(opt, 'prune_continue', False):
-                model.load_networks(restore_pretrain=False)
+            # if getattr(opt, 'prune_continue', False):
+            if opt.restore_student_G_path is not None:
+                import inspect
+                print(inspect.getargspec(model.load_networks))
+                model.load_networks(prune_continue=True)
                 logger.print_info('All networks loaded.')
             model.print_networks()
             if 'spade' in self.opt.distiller:

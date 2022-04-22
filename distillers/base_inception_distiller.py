@@ -357,30 +357,30 @@ class BaseInceptionDistiller(BaseModel):
                         (name, num_params / 1e6))
         print('-----------------------------------------------')
 
-    def load_networks(self,
-                      verbose=True,
-                      teacher_only=False,
-                      restore_pretrain=True):
+    def load_networks(self, verbose=True, prune_continue=False):
         util.load_network(self.netG_teacher, self.opt.restore_teacher_G_path,
                           verbose)
-        if self.opt.restore_student_G_path is not None:
-            util.load_network(self.netG_student,
-                              self.opt.restore_student_G_path, verbose)
-            if hasattr(self, 'netG_student_tmp'):
-                util.load_network(self.netG_student_tmp,
-                                  self.opt.restore_student_G_path, verbose)
         if self.opt.restore_D_path is not None:
             util.load_network(self.netD, self.opt.restore_D_path, verbose)
-        if self.opt.restore_A_path is not None:
-            for i, netA in enumerate(self.netAs):
-                path = '%s-%d.pth' % (self.opt.restore_A_path, i)
-                util.load_network(netA, path, verbose)
-        if self.opt.restore_O_path is not None:
-            for i, optimizer in enumerate(self.optimizers):
-                path = '%s-%d.pth' % (self.opt.restore_O_path, i)
-                util.load_optimizer(optimizer, path, verbose)
-                for param_group in optimizer.param_groups:
-                    param_group['lr'] = self.opt.lr
+        
+        if prune_continue:
+            if self.opt.restore_student_G_path is not None:
+                util.load_network(self.netG_student,
+                                self.opt.restore_student_G_path, verbose)
+                if hasattr(self, 'netG_student_tmp'):
+                    util.load_network(self.netG_student_tmp,
+                                    self.opt.restore_student_G_path, verbose)
+            
+            if self.opt.restore_A_path is not None:
+                for i, netA in enumerate(self.netAs):
+                    path = '%s-%d.pth' % (self.opt.restore_A_path, i)
+                    util.load_network(netA, path, verbose)
+            if self.opt.restore_O_path is not None:
+                for i, optimizer in enumerate(self.optimizers):
+                    path = '%s-%d.pth' % (self.opt.restore_O_path, i)
+                    util.load_optimizer(optimizer, path, verbose)
+                    for param_group in optimizer.param_groups:
+                        param_group['lr'] = self.opt.lr
 
     def save_networks(self, epoch):
         def save_net(net, save_path):

@@ -90,8 +90,7 @@ class BaseModel(ABC):
                 networks.get_scheduler(optimizer, opt)
                 for optimizer in self.optimizers
             ]
-        self.load_networks(verbose=verbose,
-                           teacher_only=getattr(opt, 'prune_continue', False))
+        self.load_networks(verbose=verbose)
         if verbose:
             self.print_networks()
 
@@ -187,10 +186,7 @@ class BaseModel(ABC):
             errors_set[key] = float(getattr(self, 'loss_' + name))
         return errors_set
 
-    def load_networks(self,
-                      verbose=True,
-                      teacher_only=False,
-                      restore_pretrain=True):
+    def load_networks(self, verbose=True):
         for name in self.model_names:
             net = getattr(self, 'net' + name, None)
             path = getattr(self.opt, 'restore_%s_path' % name, None)
