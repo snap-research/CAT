@@ -109,8 +109,6 @@ class Trainer:
                 []).to(model.device)
             # if getattr(opt, 'prune_continue', False):
             if opt.restore_student_G_path is not None:
-                import inspect
-                print(inspect.getargspec(model.load_networks))
                 model.load_networks(prune_continue=True)
                 logger.print_info('All networks loaded.')
             model.print_networks()
